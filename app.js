@@ -29,18 +29,22 @@ const KEY = '20267805-97b0d370ad3f76859b7f76832';
 
 // show images 
 const showImages = (images) => {
-  hideSpinner()
-  imagesArea.style.display = 'block';
-  gallery.innerHTML = '';
-  // show gallery title
-  galleryHeader.style.display = 'flex';
-  images.forEach(image => {
-    let div = document.createElement('div');
-    div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
-    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div)
-  })
-
+  if (images.length>0) {
+    hideSpinner()
+    imagesArea.style.display = 'block';
+    gallery.innerHTML = '';
+    // show gallery title
+    galleryHeader.style.display = 'flex';
+    images.forEach(image => {
+      let div = document.createElement('div');
+      div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
+      div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
+      gallery.appendChild(div)
+    })
+  }else{
+    hideSpinner()
+    displayMessage('No image found...')
+  }
 }
 
 const getImages = (query) => {
@@ -76,7 +80,7 @@ const createSlider = () => {
     displayMessage('Select at least 2 image.')
     return;
   }
-  const duration = document.getElementById('duration').value || 1000;
+  const duration = parseInt(document.getElementById('duration').value) || 1000;
   if (duration<0) {
     displayMessage("!!Ops... Duration can't be negetive  or zero ")
     return false;
@@ -153,6 +157,7 @@ searchForm.addEventListener('submit', function (e) {
   displayMessage(msg)
   showSpinner()
   getImages(search.value)
+  search.value = ''
   sliders.length = 0;
 })
 
